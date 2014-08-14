@@ -19,6 +19,7 @@ nv.models.lineChart = function() {
     , showLegend = true
     , showXAxis = true
     , showYAxis = true
+    , showValues = false
     , rightAlignYAxis = false
     , useInteractiveGuideline = false
     , tooltips = true
@@ -457,6 +458,12 @@ nv.models.lineChart = function() {
   chart.transitionDuration = function(_) {
     if (!arguments.length) return transitionDuration;
     transitionDuration = _;
+    return chart;
+  };
+
+  chart.showValues = function(_) {
+    if (!arguments.length) return showValues;
+    showValues = _;
     return chart;
   };
 

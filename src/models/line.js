@@ -20,6 +20,7 @@ nv.models.line = function() {
     , x //can be accessed via chart.xScale()
     , y //can be accessed via chart.yScale()
     , interpolate = "linear" // controls the line interpolation
+    , showValues = false
     ;
 
   scatter
@@ -51,6 +52,10 @@ nv.models.line = function() {
 
       x = scatter.xScale();
       y = scatter.yScale();
+
+      // // If showValues, pad the Y axis range to account for label height
+      // if (showValues) y.range(yRange || [availableHeight - (y.domain()[0] < 0 ? 12 : 0), y.domain()[1] > 0 ? 12 : 0]);
+      // else y.range(yRange || [availableHeight, 0]);
 
       x0 = x0 || x;
       y0 = y0 || y;
@@ -176,6 +181,23 @@ nv.models.line = function() {
               .x(function(d,i) { return nv.utils.NaNtoZero(x(getX(d,i))) })
               .y(function(d,i) { return nv.utils.NaNtoZero(y(getY(d,i))) })
           );
+
+      var pointCircles = groups.selectAll('circle.nv-point')
+      if (showValues) {
+        pointCircles.append('text')
+          .attr('text-anchor', 'middle')
+          ;
+
+        groups.select('text')
+          .text(function(d,i) { return valueFormat(getY(d,i)) })
+          .transition()
+          .attr('x', x.rangeBand() * .9 / 2)
+          .attr('y', function(d,i) { return getY(d,i) < 0 ? y(getY(d,i)) - y(0) + 12 : -4 })
+
+          ;
+      } else {
+        groups.selectAll('text').remove();
+      }
 
 
 
